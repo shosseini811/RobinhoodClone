@@ -1,0 +1,196 @@
+# ServiceMonitor for Prometheus to scrape metrics
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: robinhood-backend-monitor
+  namespace: robinhood-clone
+  labels:
+    app: backend
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+  - port: http
+    path: /metrics
+    interval: 30s
+---
+# Prometheus Rules for alerting
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: robinhood-alerts
+  namespace: robinhood-clone
+  labels:
+    app: robinhood-clone
+    release: prometheus
+spec:
+  groups:
+  - name: robinhood.rules
+    rules:
+    # High CPU usage alert
+    - alert: HighCPUUsage
+      expr: rate(container_cpu_usage_seconds_total{namespace="robinhood-clone"}[5m]) * 100 > 80
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High CPU usage detected"
+        description: "CPU usage is above 80% for more than 5 minutes"
+    
+    # High memory usage alert
+    - alert: HighMemoryUsage
+      expr: (container_memory_usage_bytes{namespace="robinhood-clone"} / container_spec_memory_limit_bytes{namespace="robinhood-clone"}) * 100 > 85
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High memory usage detected"
+        description: "Memory usage is above 85% for more than 5 minutes"
+    
+    # Pod restart alert
+    - alert: PodRestartingTooOften
+      expr: rate(kube_pod_container_status_restarts_total{namespace="robinhood-clone"}[1h]) > 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Pod is restarting too often"
+        description: "Pod {{ $labels.pod }} is restarting more than expected"
+    
+    # Database connection alert
+    - alert: DatabaseDown
+      expr: up{job="postgres-service"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Database is down"
+        description: "PostgreSQL database is not responding"
+    
+    # Redis connection alert
+    - alert: RedisDown
+      expr: up{job="redis-service"} == 0
+      for: 1m
+      labels:
+        severity: critical
+      annotations:
+        summary: "Redis is down"
+        description: "Redis cache is not responding"
+    
+    # API response time alert
+    - alert: HighAPIResponseTime
+      expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{namespace="robinhood-clone"}[5m])) > 2
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High API response time"
+        description: "95th percentile response time is above 2 seconds"
+---
+# Grafana Dashboard ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: robinhood-dashboard
+  namespace: robinhood-clone
+  labels:
+    grafana_dashboard: "1"
+data:
+  robinhood-dashboard.json: |
+    {
+      "dashboard": {
+        "id": null,
+        "title": "Robinhood Clone Monitoring",
+        "tags": ["robinhood", "kubernetes"],
+        "timezone": "browser",
+        "panels": [
+          {
+            "id": 1,
+            "title": "CPU Usage",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(container_cpu_usage_seconds_total{namespace=\"robinhood-clone\"}[5m]) * 100",
+                "legendFormat": "{{pod}}"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "CPU %",
+                "max": 100,
+                "min": 0
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Memory Usage",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "container_memory_usage_bytes{namespace=\"robinhood-clone\"} / 1024 / 1024",
+                "legendFormat": "{{pod}}"
+              }
+            ],
+            "yAxes": [
+              {
+                "label": "Memory (MB)",
+                "min": 0
+              }
+            ]
+          },
+          {
+            "id": 3,
+            "title": "HTTP Requests per Second",
+            "type": "graph",
+            "targets": [
+              {
+                "expr": "rate(http_requests_total{namespace=\"robinhood-clone\"}[5m])",
+                "legendFormat": "{{method}} {{status}}"
+              }
+            ]
+          },
+          {
+            "id": 4,
+            "title": "Pod Status",
+            "type": "stat",
+            "targets": [
+              {
+                "expr": "kube_pod_status_phase{namespace=\"robinhood-clone\"}",
+                "legendFormat": "{{pod}} - {{phase}}"
+              }
+            ]
+          }
+        ],
+        "time": {
+          "from": "now-1h",
+          "to": "now"
+        },
+        "refresh": "30s"
+      }
+    }
+---
+# PodDisruptionBudget for high availability
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: backend-pdb
+  namespace: robinhood-clone
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: backend
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: frontend-pdb
+  namespace: robinhood-clone
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: frontend
