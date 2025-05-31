@@ -145,7 +145,7 @@ RobinhoodClone/
 
 1. **"API limit reached"**: You've exceeded Alpha Vantage rate limits. Wait a minute and try again.
 
-2. **"Network Error"**: Make sure the backend server is running on `http://localhost:5000`
+2. **"Network Error"**: Make sure the backend server is running on `http://localhost:5001`
 
 3. **Charts not loading**: This might be due to API rate limits or insufficient data
 
@@ -155,7 +155,7 @@ RobinhoodClone/
 
 - Make sure your `.env` file contains a valid Alpha Vantage API key
 - Check that all Python dependencies are installed
-- Verify the Flask server is running on port 5000
+- Verify the Flask server is running on port 5001
 
 ### Frontend Issues
 
