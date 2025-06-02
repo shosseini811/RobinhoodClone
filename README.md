@@ -12,10 +12,7 @@ A simple stock visualization app built with React Native (frontend) and Python F
 
 ## Demo Video
 
-<video width="600" controls>
-  <source src="https://github.com/user-attachments/assets/d24aec6d-ca17-4b8e-a11b-22ffb147da15">
-  Your browser does not support the video tag.
-</video>
+[![Video Thumbnail](https://via.placeholder.com/600x400/363636/FFFFFF?text=Click+to+Play+Video)](https://github.com/user-attachments/assets/d24aec6d-ca17-4b8e-a11b-22ffb147da15)
 
 
 ## Tech Stack
