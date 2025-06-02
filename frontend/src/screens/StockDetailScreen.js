@@ -91,7 +91,7 @@ const StockDetailScreen = ({ route }) => {
 
   useEffect(() => {
     fetchStockData();
-    fetchChartData();
+    // fetchChartData(); // Disabled for now
     checkWatchlistStatus();
   }, [symbol]);
 
@@ -148,8 +148,8 @@ const StockDetailScreen = ({ route }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Chart Section */}
-      <View style={styles.chartSection}>
+      {/* Chart Section - Disabled for now */}
+      {/* <View style={styles.chartSection}>
         <Text style={styles.sectionTitle}>7-Day Price Chart</Text>
         {chartLoading ? (
           <View style={styles.chartLoadingContainer}>
@@ -185,7 +185,7 @@ const StockDetailScreen = ({ route }) => {
             <Text style={styles.chartErrorText}>Chart data unavailable</Text>
           </View>
         )}
-      </View>
+      </View> */}
 
       {/* Stock Details */}
       <View style={styles.detailsSection}>

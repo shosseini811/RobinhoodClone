@@ -13,7 +13,7 @@ import axios from 'axios';
 const API_BASE_URL = 'http://localhost:5001/api';
 
 const HomeScreen = ({ navigation }) => {
-  const [stocks, setStocks] = useState([]);
+  const [stocks, setStocks] = useState([]); // This initializes a state variable with an empty array as the default value
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -21,6 +21,8 @@ const HomeScreen = ({ navigation }) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/market/overview`);
       setStocks(response.data);
+      console.log(response.data);
+      console.log(stocks);
     } catch (error) {
       console.error('Error fetching market overview:', error);
     } finally {

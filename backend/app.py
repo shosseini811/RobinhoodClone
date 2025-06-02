@@ -2,18 +2,19 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import sleep
 
 app = Flask(__name__)
 CORS(app)
 
-# Alpha Vantage API configuration
-ALPHA_VANTAGE_API_KEY = os.getenv('ALPHA_VANTAGE_API_KEY', 'demo')
-ALPHA_VANTAGE_BASE_URL = 'https://www.alphavantage.co/query'
+# Finnhub API configuration
+FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY', 'demo')
+FINNHUB_BASE_URL = 'https://finnhub.io/api/v1'
 
 # Sample watchlist data (in a real app, this would be in a database)
-watchlist = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN']
+watchlist = []
+# watchlist = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN']
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -21,26 +22,30 @@ def health_check():
 
 @app.route('/api/stock/<symbol>', methods=['GET'])
 def get_stock_price(symbol):
-    """Get current stock price from Alpha Vantage"""
+    """Get current stock price from Finnhub"""
     try:
-        params = {
-            'function': 'GLOBAL_QUOTE',
+        # Get current price
+        quote_url = f'{FINNHUB_BASE_URL}/quote'
+        quote_params = {
             'symbol': symbol.upper(),
-            'apikey': ALPHA_VANTAGE_API_KEY
+            'token': FINNHUB_API_KEY
         }
         
-        response = requests.get(ALPHA_VANTAGE_BASE_URL, params=params)
-        data = response.json()
-        
-        if 'Global Quote' in data:
-            quote = data['Global Quote']
+        quote_response = requests.get(quote_url, params=quote_params)
+        quote_data = quote_response.json()
+        print(quote_data)
+        if quote_data.get('c') is not None:  # 'c' is current price
+            current_price = quote_data['c']
+            change = quote_data['d']  # daily change
+            change_percent = quote_data['dp']  # daily change percent
+            
             return jsonify({
-                'symbol': quote['01. symbol'],
-                'price': float(quote['05. price']),
-                'change': float(quote['09. change']),
-                'change_percent': quote['10. change percent'].replace('%', ''),
-                'volume': int(quote['06. volume']),
-                'timestamp': quote['07. latest trading day']
+                'symbol': symbol.upper(),
+                'price': float(current_price),
+                'change': float(change),
+                'change_percent': str(change_percent),
+                'volume': 0,  # Volume not available in basic quote
+                'timestamp': datetime.now().isoformat()
             })
         else:
             return jsonify({'error': 'Stock not found or API limit reached'}), 404
@@ -52,24 +57,24 @@ def get_stock_price(symbol):
 def search_stocks(query):
     """Search for stocks by symbol or company name"""
     try:
+        search_url = f'{FINNHUB_BASE_URL}/search'
         params = {
-            'function': 'SYMBOL_SEARCH',
-            'keywords': query,
-            'apikey': ALPHA_VANTAGE_API_KEY
+            'q': query,
+            'token': FINNHUB_API_KEY
         }
         
-        response = requests.get(ALPHA_VANTAGE_BASE_URL, params=params)
+        response = requests.get(search_url, params=params)
         data = response.json()
         
-        if 'bestMatches' in data:
+        if 'result' in data:
             results = []
-            for match in data['bestMatches'][:10]:  # Limit to 10 results
+            for match in data['result'][:10]:  # Limit to 10 results
                 results.append({
-                    'symbol': match['1. symbol'],
-                    'name': match['2. name'],
-                    'type': match['3. type'],
-                    'region': match['4. region'],
-                    'currency': match['8. currency']
+                    'symbol': match['symbol'],
+                    'name': match['description'],
+                    'type': match['type'],
+                    'region': 'US',  # Finnhub doesn't provide region in search
+                    'currency': 'USD'  # Default to USD
                 })
             return jsonify(results)
         else:
@@ -105,72 +110,75 @@ def remove_from_watchlist(symbol):
     
     return jsonify({'error': 'Symbol not in watchlist'}), 404
 
-@app.route('/api/stock/<symbol>/chart', methods=['GET'])
-def get_stock_chart(symbol):
-    """Get stock chart data (daily time series)"""
-    try:
-        params = {
-            'function': 'TIME_SERIES_DAILY',
-            'symbol': symbol.upper(),
-            'apikey': ALPHA_VANTAGE_API_KEY,
-            'outputsize': 'compact'  # Last 100 data points
-        }
-        
-        response = requests.get(ALPHA_VANTAGE_BASE_URL, params=params)
-        data = response.json()
-        
-        if 'Time Series (Daily)' in data:
-            time_series = data['Time Series (Daily)']
-            chart_data = []
-            
-            for date, values in sorted(time_series.items()):
-                chart_data.append({
-                    'date': date,
-                    'open': float(values['1. open']),
-                    'high': float(values['2. high']),
-                    'low': float(values['3. low']),
-                    'close': float(values['4. close']),
-                    'volume': int(values['5. volume'])
-                })
-            
-            return jsonify({
-                'symbol': symbol.upper(),
-                'data': chart_data[-30:]  # Last 30 days
-            })
-        else:
-            return jsonify({'error': 'Chart data not found or API limit reached'}), 404
-            
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+# @app.route('/api/stock/<symbol>/chart', methods=['GET'])
+# def get_stock_chart(symbol):
+#     """Get stock chart data (daily candles)"""
+#     try:
+#         # Get data for last 30 days
+#         from_timestamp = int((datetime.now() - timedelta(days=30)).timestamp())
+#         to_timestamp = int(datetime.now().timestamp())
+#         
+#         candles_url = f'{FINNHUB_BASE_URL}/stock/candle'
+#         params = {
+#             'symbol': symbol.upper(),
+#             'resolution': 'D',  # Daily resolution
+#             'from': from_timestamp,
+#             'to': to_timestamp,
+#             'token': FINNHUB_API_KEY
+#         }
+#         
+#         response = requests.get(candles_url, params=params)
+#         data = response.json()
+#         
+#         if data.get('s') == 'ok':  # 's' is status
+#             chart_data = []
+#             
+#             for i in range(len(data['t'])):
+#                 chart_data.append({
+#                     'date': datetime.fromtimestamp(data['t'][i]).strftime('%Y-%m-%d'),
+#                     'open': float(data['o'][i]),
+#                     'high': float(data['h'][i]),
+#                     'low': float(data['l'][i]),
+#                     'close': float(data['c'][i]),
+#                     'volume': int(data['v'][i])
+#                 })
+#             
+#             return jsonify({
+#                 'symbol': symbol.upper(),
+#                 'data': chart_data
+#             })
+#         else:
+#             return jsonify({'error': 'Chart data not found or API limit reached'}), 404
+#             
+#     except Exception as e:
+#         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/market/overview', methods=['GET'])
 def get_market_overview():
     """Get overview of popular stocks"""
-    popular_stocks = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN', 'META', 'NVDA', 'NFLX']
+    popular_stocks = ['AAPL']  # Only Apple stock to conserve API usage
     overview = []
     
     for symbol in popular_stocks:
         try:
+            quote_url = f'{FINNHUB_BASE_URL}/quote'
             params = {
-                'function': 'GLOBAL_QUOTE',
                 'symbol': symbol,
-                'apikey': ALPHA_VANTAGE_API_KEY
+                'token': FINNHUB_API_KEY
             }
             
-            response = requests.get(ALPHA_VANTAGE_BASE_URL, params=params)
+            response = requests.get(quote_url, params=params)
             data = response.json()
             
-            if 'Global Quote' in data:
-                quote = data['Global Quote']
+            if data.get('c') is not None:  # 'c' is current price
                 overview.append({
-                    'symbol': quote['01. symbol'],
-                    'price': float(quote['05. price']),
-                    'change': float(quote['09. change']),
-                    'change_percent': quote['10. change percent'].replace('%', '')
+                    'symbol': symbol,
+                    'price': float(data['c']),
+                    'change': float(data['d']),
+                    'change_percent': str(data['dp'])
                 })
             
-            # Wait 12 seconds between API calls to respect rate limits (5 calls per minute)
-            sleep(12)
+            # No need to wait since we're only fetching one stock
         except:
             continue  # Skip if API call fails
     

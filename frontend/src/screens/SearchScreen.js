@@ -29,6 +29,10 @@ const SearchScreen = ({ navigation }) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/search/${query}`);
       setSearchResults(response.data);
+      console.log("response.data:", response.data);
+      // React state update is asynchronous, so the state variable will not immediately reflect the updated value
+      
+      console.log("SearchResult:",searchResults);
     } catch (error) {
       console.error('Error searching stocks:', error);
       Alert.alert('Error', 'Failed to search stocks. Please try again.');
