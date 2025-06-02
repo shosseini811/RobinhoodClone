@@ -10,6 +10,15 @@ A simple stock visualization app built with React Native (frontend) and Python F
 - 📊 **Stock Details**: View detailed stock information with 7-day price charts
 - 📱 **Mobile-First**: Built with React Native for iOS and Android
 
+## Demo Video
+
+<video width="600" controls>
+  <source src="YOUR_VIDEO_LINK_HERE" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+*Note: Replace `YOUR_VIDEO_LINK_HERE` with your actual video URL*
+
 ## Tech Stack
 
 ### Backend
