@@ -22,7 +22,7 @@ const StockDetailScreen = ({ route }) => {
   const [loading, setLoading] = useState(true);
   const [chartLoading, setChartLoading] = useState(true);
   const [isInWatchlist, setIsInWatchlist] = useState(false);
-
+  // console.log("StockDetailScreen function route", route)
   const fetchStockData = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/stock/${symbol}`);
@@ -66,6 +66,7 @@ const StockDetailScreen = ({ route }) => {
   const checkWatchlistStatus = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/watchlist`);
+      console.log('Watchlist response:', response);
       setIsInWatchlist(response.data.includes(symbol));
     } catch (error) {
       console.error('Error checking watchlist status:', error);
@@ -93,12 +94,14 @@ const StockDetailScreen = ({ route }) => {
     fetchStockData();
     // fetchChartData(); // Disabled for now
     checkWatchlistStatus();
-  }, [symbol]);
+    // Without dependencies : Functions would run constantly (bad performance) 
+    // With [symbol] : Functions only run when stock symbol changes (efficient)
+  }, [symbol]); // Run when 'symbol' changes
 
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#00C851" />
+        <ActivityIndicator size="large" color="#00C851" /> {/* Green color (#00C851) for loading spinner - matches app's accent color */}
         <Text style={styles.loadingText}>Loading stock details...</Text>
       </View>
     );
@@ -111,8 +114,8 @@ const StockDetailScreen = ({ route }) => {
       </View>
     );
   }
-
-  const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444';
+  console.log("StockDetailScreen function stockData", stockData)
+  const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444'; // Green (#00C851) for positive gains, Red (#FF4444) for losses
   const changePrefix = parseFloat(stockData.change) >= 0 ? '+' : '';
 
   return (
@@ -225,34 +228,34 @@ const StockDetailScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background for the main container
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background matching main container
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for loading message
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background matching main container
   },
   errorText: {
     fontSize: 18,
-    color: '#FF4444',
+    color: '#FF4444', // Red text for error messages
   },
   header: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for header section
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#e0e0e0', // Light gray border to separate header from content
   },
   stockInfo: {
     marginBottom: 16,
@@ -260,12 +263,12 @@ const styles = StyleSheet.create({
   stockSymbol: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for stock symbol
   },
   stockPrice: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for stock price
     marginTop: 8,
   },
   changeContainer: {
@@ -277,35 +280,37 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginRight: 8,
+    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
   changePercent: {
     fontSize: 18,
     fontWeight: 'bold',
+    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
   watchlistButton: {
-    backgroundColor: '#00C851',
+    backgroundColor: '#00C851', // Green background for add to watchlist button
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   watchlistButtonActive: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#e0e0e0', // Light gray background when stock is already in watchlist
   },
   watchlistButtonText: {
-    color: '#fff',
+    color: '#fff', // White text for watchlist button
     fontSize: 16,
     fontWeight: 'bold',
   },
   watchlistButtonTextActive: {
-    color: '#666',
+    color: '#666', // Medium gray text when stock is already in watchlist
   },
   chartSection: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for chart section
     margin: 16,
     padding: 16,
     borderRadius: 12,
-    shadowColor: '#000',
+    shadowColor: '#000', // Black shadow color for card depth effect
     shadowOffset: {
       width: 0,
       height: 2,
@@ -326,19 +331,19 @@ const styles = StyleSheet.create({
   },
   chartErrorText: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for chart error message
   },
   chart: {
     marginVertical: 8,
     borderRadius: 16,
   },
   detailsSection: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for details section
     margin: 16,
     marginTop: 0,
     padding: 16,
     borderRadius: 12,
-    shadowColor: '#000',
+    shadowColor: '#000', // Black shadow color for card depth effect
     shadowOffset: {
       width: 0,
       height: 2,
@@ -350,7 +355,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for section titles
     marginBottom: 16,
   },
   detailRow: {
@@ -359,16 +364,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#f0f0f0', // Very light gray border between detail rows
   },
   detailLabel: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for detail labels
   },
   detailValue: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for detail values
   },
 });
 

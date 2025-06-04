@@ -22,7 +22,8 @@ const HomeScreen = ({ navigation }) => {
       const response = await axios.get(`${API_BASE_URL}/market/overview`);
       setStocks(response.data);
       console.log(response.data);
-      console.log(stocks);
+      // console.log(stocks);
+
     } catch (error) {
       console.error('Error fetching market overview:', error);
     } finally {
@@ -32,8 +33,20 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    console.log('🚀 HomeScreen mounted, fetching stocks...');
     fetchMarketOverview();
-  }, []);
+  }, []); // Run this effect only once after the initial render
+
+    // This useEffect runs whenever stocks change
+    useEffect(() => {
+      console.log('📊 Stocks state updated!');
+      console.log('📈 Number of stocks:', stocks.length);
+      
+      if (stocks.length > 0) {
+        console.log('🎯 First stock example:', stocks[0]);
+        console.log('💰 All stock symbols:', stocks.map(stock => stock.symbol));
+      }
+    }, [stocks]); // Dependency: runs when stocks changes
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -41,7 +54,8 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const renderStockItem = ({ item }) => {
-    const changeColor = parseFloat(item.change) >= 0 ? '#00C851' : '#FF4444';
+            {/* Green color Or Red */}
+    const changeColor = parseFloat(item.change) >= 0 ? '#00C851' : '#FF4444'; // Green (#00C851) for positive gains, Red (#FF4444) for losses
     const changePrefix = parseFloat(item.change) >= 0 ? '+' : '';
 
     return (
@@ -67,8 +81,9 @@ const HomeScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#00C851" />
+      <View style={styles.loadingContainer}>.       
+        {/* Green color*/}
+        <ActivityIndicator size="large" color="#00C851" /> {/* Green color (#00C851) for loading spinner - matches app's accent color */}
         <Text style={styles.loadingText}>Loading market data...</Text>
       </View>
     );
@@ -98,47 +113,47 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background for the main container
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background matching main container
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for loading message
   },
   header: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for header section
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#e0e0e0', // Light gray border to separate header from content
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for main title
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for subtitle
     marginTop: 4,
   },
   listContainer: {
     padding: 16,
   },
   stockItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for each stock item card
     padding: 16,
     marginBottom: 12,
     borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#000', // Black shadow color for card depth effect
     shadowOffset: {
       width: 0,
       height: 2,
@@ -153,11 +168,11 @@ const styles = StyleSheet.create({
   stockSymbol: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for stock symbol
   },
   stockPrice: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for stock price
     marginTop: 4,
   },
   stockChange: {
@@ -166,10 +181,12 @@ const styles = StyleSheet.create({
   changeText: {
     fontSize: 16,
     fontWeight: 'bold',
+    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
   changePercent: {
     fontSize: 14,
     marginTop: 2,
+    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
 });
 

@@ -150,21 +150,21 @@ const SearchScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background for the main container
   },
   searchContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for search input area
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#e0e0e0', // Light gray border to separate search area from results
   },
   searchInput: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background for search input field
     padding: 12,
     borderRadius: 8,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#e0e0e0', // Light gray border around search input
   },
   loadingContainer: {
     flex: 1,
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for loading message
   },
   emptyContainer: {
     flex: 1,
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   },
   emptySubtext: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for empty state message
     textAlign: 'center',
     lineHeight: 24,
   },
@@ -196,13 +196,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   resultItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for each search result item
     padding: 16,
     marginBottom: 12,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#000', // Black shadow color for card depth effect
     shadowOffset: {
       width: 0,
       height: 2,
@@ -218,21 +218,21 @@ const styles = StyleSheet.create({
   stockSymbol: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for stock symbol
   },
   stockName: {
     fontSize: 14,
-    color: '#666',
+    color: '#666', // Medium gray text for company name
     marginTop: 4,
     lineHeight: 20,
   },
   stockDetails: {
     fontSize: 12,
-    color: '#999',
+    color: '#999', // Light gray text for additional stock details
     marginTop: 4,
   },
   watchlistButton: {
-    backgroundColor: '#00C851',
+    backgroundColor: '#00C851', // Green background for add to watchlist button
     width: 36,
     height: 36,
     borderRadius: 18,
@@ -240,15 +240,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   watchlistButtonAdded: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#e0e0e0', // Light gray background when stock is already in watchlist
   },
   watchlistButtonText: {
-    color: '#fff',
+    color: '#fff', // White text for watchlist button
     fontSize: 18,
     fontWeight: 'bold',
   },
   watchlistButtonTextAdded: {
-    color: '#666',
+    color: '#666', // Medium gray text when stock is already in watchlist
   },
 });
 

@@ -13,7 +13,7 @@ FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY', 'demo')
 FINNHUB_BASE_URL = 'https://finnhub.io/api/v1'
 
 # Sample watchlist data (in a real app, this would be in a database)
-watchlist = []
+watchlist = ['GOOGL', 'MSFT']
 # watchlist = ['AAPL', 'GOOGL', 'MSFT', 'TSLA', 'AMZN']
 
 @app.route('/api/health', methods=['GET'])
@@ -86,7 +86,8 @@ def search_stocks(query):
 @app.route('/api/watchlist', methods=['GET'])
 def get_watchlist():
     """Get user's watchlist"""
-    return jsonify(watchlist)
+    print('Watchlist:', watchlist)
+    return jsonify(watchlist) # This sends JSON to the client
 
 @app.route('/api/watchlist', methods=['POST'])
 def add_to_watchlist():
@@ -156,7 +157,7 @@ def remove_from_watchlist(symbol):
 @app.route('/api/market/overview', methods=['GET'])
 def get_market_overview():
     """Get overview of popular stocks"""
-    popular_stocks = ['AAPL']  # Only Apple stock to conserve API usage
+    popular_stocks = ['AAPL','TSLA']  # Only Apple stock to conserve API usage
     overview = []
     
     for symbol in popular_stocks:

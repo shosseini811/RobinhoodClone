@@ -15,18 +15,24 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 // Stack navigator for Home and Stock Detail
+// that will manage two screens.
 function HomeStack() {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
+      {/* First screen in the stack */}
+      <Stack.Screen  // defines one specific screen in the stack
         name="HomeMain" 
         component={HomeScreen} 
-        options={{ title: 'Market Overview' }}
+        options={{ title: 'Home Screen' }}// Sets the title in the header
       />
+      {/* Second screen in the stack */}
       <Stack.Screen 
         name="StockDetail" 
         component={StockDetailScreen} 
-        options={({ route }) => ({ title: route.params.symbol })}
+        options={({ route }) => {
+          console.log('HomeStack route:', route);
+          return { title: route.params.symbol };
+        }}
       />
     </Stack.Navigator>
   );
@@ -36,6 +42,7 @@ function HomeStack() {
 function WatchlistStack() {
   return (
     <Stack.Navigator>
+          {/* <Stack.Navigator screenOptions={{ headerStyle: { backgroundColor: 'papayawhip' } }}> */}
       <Stack.Screen 
         name="WatchlistMain" 
         component={WatchlistScreen} 
@@ -44,7 +51,10 @@ function WatchlistStack() {
       <Stack.Screen 
         name="StockDetail" 
         component={StockDetailScreen} 
-        options={({ route }) => ({ title: route.params.symbol })}
+        options={({ route }) => {
+          console.log('WatchlistStack route:', route);
+          return { title: route.params.symbol };
+        }}
       />
     </Stack.Navigator>
   );
@@ -122,7 +132,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for the main container
     alignItems: 'center',
     justifyContent: 'center',
   },

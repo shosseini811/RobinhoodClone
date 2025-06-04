@@ -21,8 +21,10 @@ const WatchlistScreen = ({ navigation }) => {
 
   const fetchWatchlist = async () => {
     try {
+      // await means "wait for this to complete before moving to the next line"
       const response = await axios.get(`${API_BASE_URL}/watchlist`);
       setWatchlist(response.data);
+      console.log('Response Data:', response.data);
       
       // Fetch prices for each stock in watchlist
       const prices = {};
@@ -30,10 +32,12 @@ const WatchlistScreen = ({ navigation }) => {
         try {
           const priceResponse = await axios.get(`${API_BASE_URL}/stock/${symbol}`);
           prices[symbol] = priceResponse.data;
+          console.log(`Price for ${symbol}:`, prices[symbol]);
         } catch (error) {
           console.error(`Error fetching price for ${symbol}:`, error);
         }
       }
+      console.log("Prices have been collected")
       setStockPrices(prices);
     } catch (error) {
       console.error('Error fetching watchlist:', error);
@@ -85,12 +89,12 @@ const WatchlistScreen = ({ navigation }) => {
       return (
         <View style={styles.stockItem}>
           <Text style={styles.stockSymbol}>{item}</Text>
-          <ActivityIndicator size="small" color="#00C851" />
+          <ActivityIndicator size="small" color="#00C851" /> {/* Green loading spinner for individual stock items */}
         </View>
       );
     }
 
-    const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444';
+    const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444'; // Green for gains, red for losses
     const changePrefix = parseFloat(stockData.change) >= 0 ? '+' : '';
 
     return (
@@ -101,6 +105,7 @@ const WatchlistScreen = ({ navigation }) => {
         <View style={styles.stockInfo}>
           <Text style={styles.stockSymbol}>{stockData.symbol}</Text>
           <Text style={styles.stockPrice}>${stockData.price.toFixed(2)}</Text>
+          {/* <Text>Sohail Hosseini</Text>  */}
         </View>
         <View style={styles.stockChange}>
           <Text style={[styles.changeText, { color: changeColor }]}>
@@ -114,7 +119,7 @@ const WatchlistScreen = ({ navigation }) => {
           style={styles.removeButton}
           onPress={() => removeFromWatchlist(item)}
         >
-          <Text style={styles.removeButtonText}>×</Text>
+          <Text style={styles.removeButtonText}>×</Text>  {/* Red cross for remove button */}
         </TouchableOpacity>
       </TouchableOpacity>
     );
@@ -123,7 +128,7 @@ const WatchlistScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#00C851" />
+        <ActivityIndicator size="large" color="#00C851" /> {/* Green loading spinner for main watchlist loading */}
         <Text style={styles.loadingText}>Loading watchlist...</Text>
       </View>
     );
@@ -173,18 +178,18 @@ const WatchlistScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background for the main container
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f8f9fa', // Light gray background matching main container
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for loading message
   },
   emptyContainer: {
     flex: 1,
@@ -199,55 +204,55 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for empty state title
     marginBottom: 8,
   },
   emptySubtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for empty state subtitle
     textAlign: 'center',
     lineHeight: 24,
     marginBottom: 30,
   },
   searchButton: {
-    backgroundColor: '#00C851',
+    backgroundColor: '#00C851', // Green background for search button
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
   },
   searchButtonText: {
-    color: '#fff',
+    color: '#fff', // White text for search button
     fontSize: 16,
     fontWeight: 'bold',
   },
   header: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for header section
     padding: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: '#e0e0e0', // Light gray border to separate header from content
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for main title
   },
   headerSubtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for subtitle
     marginTop: 4,
   },
   listContainer: {
     padding: 16,
   },
   stockItem: {
-    backgroundColor: '#fff',
+    backgroundColor: '#fff', // Pure white background for each watchlist item card
     padding: 16,
     marginBottom: 12,
     borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: '#000', // Black shadow color for card depth effect
     shadowOffset: {
       width: 0,
       height: 2,
@@ -262,11 +267,11 @@ const styles = StyleSheet.create({
   stockSymbol: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#333', // Dark gray text for stock symbol
   },
   stockPrice: {
     fontSize: 16,
-    color: '#666',
+    color: '#666', // Medium gray text for stock price
     marginTop: 4,
   },
   stockChange: {
@@ -276,13 +281,15 @@ const styles = StyleSheet.create({
   changeText: {
     fontSize: 16,
     fontWeight: 'bold',
+    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
   changePercent: {
     fontSize: 14,
     marginTop: 2,
+    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
   removeButton: {
-    backgroundColor: '#FF4444',
+    backgroundColor: '#FF4444', // Red background for remove from watchlist button
     width: 28,
     height: 28,
     borderRadius: 14,
@@ -290,7 +297,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   removeButtonText: {
-    color: '#fff',
+    color: '#fff', // White text for remove button
     fontSize: 18,
     fontWeight: 'bold',
   },
