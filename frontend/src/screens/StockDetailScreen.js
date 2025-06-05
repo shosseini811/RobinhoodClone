@@ -108,6 +108,7 @@ const StockDetailScreen = ({ route }) => {
   }
 
   if (!stockData) {
+    console.log("StockDetailScreen stockData null value", stockData)
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>Failed to load stock data</Text>
@@ -126,6 +127,8 @@ const StockDetailScreen = ({ route }) => {
           <Text style={styles.stockSymbol}>{stockData.symbol}</Text>
           <Text style={styles.stockPrice}>${stockData.price.toFixed(2)}</Text>
           <View style={styles.changeContainer}>
+            {/* Start with base styles (like styles.changeText) */}
+            {/* Add or override specific properties (like { color: changeColor }) */}
             <Text style={[styles.changeText, { color: changeColor }]}>
               {changePrefix}{stockData.change.toFixed(2)}
             </Text>
@@ -134,7 +137,16 @@ const StockDetailScreen = ({ route }) => {
             </Text>
           </View>
         </View>
-        
+
+        {/* When isInWatchlist is true (Stock IS in watchlist) */}
+        {/* {
+        backgroundColor: '#e0e0e0',  // Gray - OVERRIDDEN by watchlistButtonActive!
+        paddingHorizontal: 20,       // from watchlistButton
+        paddingVertical: 12,         // from watchlistButton  
+        borderRadius: 8,             // from watchlistButton
+        alignItems: 'center',        // from watchlistButton
+      } */}
+
         <TouchableOpacity
           style={[
             styles.watchlistButton,
@@ -146,6 +158,7 @@ const StockDetailScreen = ({ route }) => {
             styles.watchlistButtonText,
             isInWatchlist && styles.watchlistButtonTextActive
           ]}>
+            {/* if isInWatchlist is true, then... */}
             {isInWatchlist ? '⭐ In Watchlist' : '☆ Add to Watchlist'}
           </Text>
         </TouchableOpacity>

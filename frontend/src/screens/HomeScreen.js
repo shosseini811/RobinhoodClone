@@ -181,12 +181,10 @@ const styles = StyleSheet.create({
   changeText: {
     fontSize: 16,
     fontWeight: 'bold',
-    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
   changePercent: {
     fontSize: 14,
     marginTop: 2,
-    // Color is dynamically set: #00C851 (green) for gains, #FF4444 (red) for losses
   },
 });
 
