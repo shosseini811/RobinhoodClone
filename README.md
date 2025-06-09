@@ -12,7 +12,19 @@ A simple stock visualization app built with React Native (frontend) and Python F
 
 ## Demo Video
 
-[![Video Thumbnail](https://via.placeholder.com/600x400/363636/FFFFFF?text=Click+to+Play+Video)](https://github.com/user-attachments/assets/d24aec6d-ca17-4b8e-a11b-22ffb147da15)
+Watch the app in action! Click to play the demo video:
+
+### Option 1: Direct Video Player
+https://github.com/user-attachments/assets/demo.MP4
+
+### Option 2: HTML5 Video (with controls)
+<video width="600" controls>
+  <source src="demo.MP4" type="video/mp4">
+  Your browser does not support the video tag. <a href="demo.MP4">Click here to download the demo video</a>.
+</video>
+
+### Option 3: Download Link
+📹 **[Download Demo Video (demo.MP4)](./demo.MP4)** - Click to download and view the full demo
 
 
 ## Tech Stack
