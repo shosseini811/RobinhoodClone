@@ -74,18 +74,29 @@ const StockDetailScreen = ({ route }) => {
   };
 
   const toggleWatchlist = async () => {
+    console.log('toggleWatchlist called, isInWatchlist:', isInWatchlist);
+    console.log('Symbol:', symbol);
+    
     try {
       if (isInWatchlist) {
-        await axios.delete(`${API_BASE_URL}/watchlist/${symbol}`);
+        console.log('Attempting to remove from watchlist...');
+        const response = await axios.delete(`${API_BASE_URL}/watchlist/${symbol}`);
+        console.log('Delete response:', response);
+        
         setIsInWatchlist(false);
         Alert.alert('Removed', `${symbol} removed from watchlist`);
+        console.log('Alert should have been shown');
       } else {
-        await axios.post(`${API_BASE_URL}/watchlist`, { symbol });
+        console.log('Attempting to add to watchlist...');
+        const response = await axios.post(`${API_BASE_URL}/watchlist`, { symbol });
+        console.log('Post response:', response);
+        
         setIsInWatchlist(true);
         Alert.alert('Added', `${symbol} added to watchlist`);
       }
     } catch (error) {
       console.error('Error toggling watchlist:', error);
+      console.error('Error details:', error.response?.data);
       Alert.alert('Error', 'Failed to update watchlist');
     }
   };
@@ -372,11 +383,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    flexDirection: 'row', // Items arranged horizontally
+    justifyContent: 'space-between', // push items to the edges
+    alignItems: 'center', // vertically center items
+    paddingVertical: 12, // vertical padding
+    borderBottomWidth: 1, // bottom border
     borderBottomColor: '#f0f0f0', // Very light gray border between detail rows
   },
   detailLabel: {
