@@ -12,7 +12,7 @@ import {
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://192.168.1.243:5001/api';
 const screenWidth = Dimensions.get('window').width;
 
 const StockDetailScreen = ({ route }) => {
@@ -112,7 +112,7 @@ const StockDetailScreen = ({ route }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#00C851" /> {/* Green color (#00C851) for loading spinner - matches app's accent color */}
+        <ActivityIndicator size="large" color="#00C851" />
         <Text style={styles.loadingText}>Loading stock details...</Text>
       </View>
     );
@@ -127,19 +127,16 @@ const StockDetailScreen = ({ route }) => {
     );
   }
   console.log("StockDetailScreen function stockData", stockData)
-  const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444'; // Green (#00C851) for positive gains, Red (#FF4444) for losses
+  const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444';
   const changePrefix = parseFloat(stockData.change) >= 0 ? '+' : '';
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      {/* Stock Header */}
       <View style={styles.header}>
         <View style={styles.stockInfo}>
           <Text style={styles.stockSymbol}>{stockData.symbol}</Text>
           <Text style={styles.stockPrice}>${stockData.price.toFixed(2)}</Text>
           <View style={styles.changeContainer}>
-            {/* Start with base styles (like styles.changeText) */}
-            {/* Add or override specific properties (like { color: changeColor }) */}
             <Text style={[styles.changeText, { color: changeColor }]}>
               {changePrefix}{stockData.change.toFixed(2)}
             </Text>
@@ -148,15 +145,6 @@ const StockDetailScreen = ({ route }) => {
             </Text>
           </View>
         </View>
-
-        {/* When isInWatchlist is true (Stock IS in watchlist) */}
-        {/* {
-        backgroundColor: '#e0e0e0',  // Gray - OVERRIDDEN by watchlistButtonActive!
-        paddingHorizontal: 20,       // from watchlistButton
-        paddingVertical: 12,         // from watchlistButton  
-        borderRadius: 8,             // from watchlistButton
-        alignItems: 'center',        // from watchlistButton
-      } */}
 
         <TouchableOpacity
           style={[
@@ -169,13 +157,11 @@ const StockDetailScreen = ({ route }) => {
             styles.watchlistButtonText,
             isInWatchlist && styles.watchlistButtonTextActive
           ]}>
-            {/* if isInWatchlist is true, then... */}
-            {isInWatchlist ? '⭐ In Watchlist' : '☆ Add to Watchlist'}
+            {isInWatchlist ? 'In Watchlist' : 'Add to Watchlist'}
           </Text>
         </TouchableOpacity>
       </View>
 
-      {/* Chart Section - Disabled for now */}
       {/* <View style={styles.chartSection}>
         <Text style={styles.sectionTitle}>7-Day Price Chart</Text>
         {chartLoading ? (
@@ -214,7 +200,6 @@ const StockDetailScreen = ({ route }) => {
         )}
       </View> */}
 
-      {/* Stock Details */}
       <View style={styles.detailsSection}>
         <Text style={styles.sectionTitle}>Stock Details</Text>
         

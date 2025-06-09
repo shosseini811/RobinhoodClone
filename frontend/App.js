@@ -94,13 +94,13 @@ export default function App() {
           },
         }}
       >
-        <Tab.Screen 
+        <Tab.Screen  // creating a single tab button at the bottom of your phone app
           name="Home"  // This is the unique identifier for this screen within the tab.
           component={HomeStack} // This is the component for this screen.
           options={{
             tabBarLabel: 'Market', // This is the label for this screen.
             tabBarIcon: ({ color }) => (
-              <Text style={{ color, fontSize: 20 }}>📈</Text> // This is the icon for this screen.
+              <Text style={{ color, fontSize: 20 }}>M</Text> // This is the icon for this screen.
             ),
           }}
         />
@@ -110,7 +110,7 @@ export default function App() {
           options={{
             tabBarLabel: 'Search',
             tabBarIcon: ({ color }) => (
-              <Text style={{ color, fontSize: 20 }}>🔍</Text>
+              <Text style={{ color, fontSize: 20 }}>S</Text>
             ),
           }}
         />
@@ -120,7 +120,7 @@ export default function App() {
           options={{
             tabBarLabel: 'Watchlist',
             tabBarIcon: ({ color }) => (
-              <Text style={{ color, fontSize: 20 }}>⭐</Text>
+              <Text style={{ color, fontSize: 20 }}>W</Text>
             ),
           }}
         />

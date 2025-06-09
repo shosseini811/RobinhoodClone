@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://192.168.1.243:5001/api';
 
 const WatchlistScreen = ({ navigation }) => {
   const [watchlist, setWatchlist] = useState([]);
@@ -89,12 +89,12 @@ const WatchlistScreen = ({ navigation }) => {
       return (
         <View style={styles.stockItem}>
           <Text style={styles.stockSymbol}>{item}</Text>
-          <ActivityIndicator size="small" color="#00C851" /> {/* Green loading spinner for individual stock items */}
+          <ActivityIndicator size="small" color="#00C851" />
         </View>
       );
     }
 
-    const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444'; // Green for gains, red for losses
+    const changeColor = parseFloat(stockData.change) >= 0 ? '#00C851' : '#FF4444';
     const changePrefix = parseFloat(stockData.change) >= 0 ? '+' : '';
 
     return (
@@ -119,7 +119,7 @@ const WatchlistScreen = ({ navigation }) => {
           style={styles.removeButton}
           onPress={() => removeFromWatchlist(item)}
         >
-          <Text style={styles.removeButtonText}>×</Text>  {/* Red cross for remove button */}
+          <Text style={styles.removeButtonText}>X</Text>
         </TouchableOpacity>
       </TouchableOpacity>
     );
@@ -128,7 +128,7 @@ const WatchlistScreen = ({ navigation }) => {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#00C851" /> {/* Green loading spinner for main watchlist loading */}
+        <ActivityIndicator size="large" color="#00C851" />
         <Text style={styles.loadingText}>Loading watchlist...</Text>
       </View>
     );
@@ -137,7 +137,7 @@ const WatchlistScreen = ({ navigation }) => {
   if (watchlist.length === 0) {
     return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyIcon}>⭐</Text>
+        <Text style={styles.emptyIcon}>*</Text>
         <Text style={styles.emptyTitle}>Your watchlist is empty</Text>
         <Text style={styles.emptySubtitle}>
           Add stocks to your watchlist to track their performance

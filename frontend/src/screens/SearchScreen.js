@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://192.168.1.243:5001/api';
 
 const SearchScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -129,7 +129,7 @@ const SearchScreen = ({ navigation }) => {
 
       {!loading && !searchQuery && (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>🔍</Text>
+          <Text style={styles.emptyText}>Search</Text>
           <Text style={styles.emptySubtext}>
             Search for stocks by symbol or company name
           </Text>

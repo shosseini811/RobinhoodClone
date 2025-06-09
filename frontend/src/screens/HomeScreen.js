@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5001/api';
+const API_BASE_URL = 'http://192.168.1.243:5001/api';
 
 const HomeScreen = ({ navigation }) => {
   const [stocks, setStocks] = useState([]); // This initializes a state variable with an empty array as the default value
@@ -33,18 +33,18 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    console.log('🚀 HomeScreen mounted, fetching stocks...');
+    console.log('HomeScreen mounted, fetching stocks...');
     fetchMarketOverview();
   }, []); // Run this effect only once after the initial render
 
     // This useEffect runs whenever stocks change
     useEffect(() => {
-      console.log('📊 Stocks state updated!');
-      console.log('📈 Number of stocks:', stocks.length);
+      console.log('Stocks state updated!');
+      console.log('Number of stocks:', stocks.length);
       
       if (stocks.length > 0) {
-        console.log('🎯 First stock example:', stocks[0]);
-        console.log('💰 All stock symbols:', stocks.map(stock => stock.symbol));
+        console.log('First stock example:', stocks[0]);
+        console.log('All stock symbols:', stocks.map(stock => stock.symbol));
       }
     }, [stocks]); // Dependency: runs when stocks changes
 
@@ -54,26 +54,24 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const renderStockItem = ({ item }) => {
-            {/* Green color Or Red */}
-    const changeColor = parseFloat(item.change) >= 0 ? '#00C851' : '#FF4444'; // Green (#00C851) for positive gains, Red (#FF4444) for losses
+    const changeColor = parseFloat(item.change) >= 0 ? '#00C851' : '#FF4444';
     const changePrefix = parseFloat(item.change) >= 0 ? '+' : '';
 
     return (
       <TouchableOpacity 
-      // When you tap on stocks, this code runs:
-        style={styles.stockItem} // This is the style for the stock item.
-        onPress={() => navigation.navigate('StockDetail', { symbol: item.symbol })} // This is the navigation function that is called when you tap on a stock.
+        style={styles.stockItem}
+        onPress={() => navigation.navigate('StockDetail', { symbol: item.symbol })}
       >
         <View style={styles.stockInfo}>
           <Text style={styles.stockSymbol}>{item.symbol}</Text>
           <Text style={styles.stockPrice}>${item.price.toFixed(2)}</Text>
         </View>
-        <View style={styles.stockChange}> // This is the style for the stock change.
-          <Text style={[styles.changeText, { color: changeColor }]}> // This is the style for the stock change text.
-            {changePrefix}{item.change.toFixed(2)} // This is the change in the stock price.
+        <View style={styles.stockChange}> 
+          <Text style={[styles.changeText, { color: changeColor }]}> 
+            {changePrefix}{item.change.toFixed(2)} 
           </Text>
-          <Text style={[styles.changePercent, { color: changeColor }]}> // This is the style for the stock change percentage.
-            ({changePrefix}{item.change_percent}%) // This is the change in the stock price percentage.
+          <Text style={[styles.changePercent, { color: changeColor }]}> 
+            ({changePrefix}{item.change_percent}%)
           </Text>
         </View>
       </TouchableOpacity>
@@ -82,9 +80,8 @@ const HomeScreen = ({ navigation }) => {
 
   if (loading) {
     return (
-      <View style={styles.loadingContainer}>.       
-        {/* Green color*/}
-        <ActivityIndicator size="large" color="#00C851" /> {/* Green color (#00C851) for loading spinner - matches app's accent color */}
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#00C851" />
         <Text style={styles.loadingText}>Loading market data...</Text>
       </View>
     );
@@ -98,14 +95,14 @@ const HomeScreen = ({ navigation }) => {
       </View>
       
       <FlatList
-        data={stocks} // ← This array contains AAPL, TSLA, GOOGL
-        renderItem={renderStockItem} // This function is called for each item in the array.
-        keyExtractor={(item) => item.symbol} // This is the key for the stock item.
+        data={stocks}
+        renderItem={renderStockItem}
+        keyExtractor={(item) => item.symbol}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> // This is the refresh control for the flat list.
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        contentContainerStyle={styles.listContainer} // This is the style for the list container.
-        showsVerticalScrollIndicator={false} // This is the scroll indicator for the flat list.
+        contentContainerStyle={styles.listContainer}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
