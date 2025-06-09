@@ -1,6 +1,6 @@
 # Robinhood Clone - Stock Visualization App
 
-A simple stock visualization app built with React Native (frontend) and Python Flask (backend), using Alpha Vantage API for real-time stock data.
+A simple stock visualization app built with React Native (frontend) and Python Flask (backend), using Finnhub API for real-time stock data.
 
 ## Features
 
@@ -16,7 +16,6 @@ Watch the app in action! Click to play the demo video:
 
 <video width="600" controls>
   <source src="https://github.com/user-attachments/assets/9793ee3e-c752-422f-8a4a-03cb97c2d1ba" type="video/mp4">
-  Your browser does not support the video tag.
 </video>
 
 
@@ -27,7 +26,7 @@ Watch the app in action! Click to play the demo video:
 - Flask (Web framework)
 - Flask-CORS (Cross-origin requests)
 - Requests (HTTP library)
-- Alpha Vantage API (Stock data)
+- Finnhub API (Stock data)
 
 ### Frontend
 - React Native
