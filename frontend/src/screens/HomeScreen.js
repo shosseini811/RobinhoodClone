@@ -59,20 +59,21 @@ const HomeScreen = ({ navigation }) => {
     const changePrefix = parseFloat(item.change) >= 0 ? '+' : '';
 
     return (
-      <TouchableOpacity
-        style={styles.stockItem}
-        onPress={() => navigation.navigate('StockDetail', { symbol: item.symbol })}
+      <TouchableOpacity 
+      // When you tap on stocks, this code runs:
+        style={styles.stockItem} // This is the style for the stock item.
+        onPress={() => navigation.navigate('StockDetail', { symbol: item.symbol })} // This is the navigation function that is called when you tap on a stock.
       >
         <View style={styles.stockInfo}>
           <Text style={styles.stockSymbol}>{item.symbol}</Text>
           <Text style={styles.stockPrice}>${item.price.toFixed(2)}</Text>
         </View>
-        <View style={styles.stockChange}>
-          <Text style={[styles.changeText, { color: changeColor }]}>
-            {changePrefix}{item.change.toFixed(2)}
+        <View style={styles.stockChange}> // This is the style for the stock change.
+          <Text style={[styles.changeText, { color: changeColor }]}> // This is the style for the stock change text.
+            {changePrefix}{item.change.toFixed(2)} // This is the change in the stock price.
           </Text>
-          <Text style={[styles.changePercent, { color: changeColor }]}>
-            ({changePrefix}{item.change_percent}%)
+          <Text style={[styles.changePercent, { color: changeColor }]}> // This is the style for the stock change percentage.
+            ({changePrefix}{item.change_percent}%) // This is the change in the stock price percentage.
           </Text>
         </View>
       </TouchableOpacity>
@@ -97,14 +98,14 @@ const HomeScreen = ({ navigation }) => {
       </View>
       
       <FlatList
-        data={stocks}
-        renderItem={renderStockItem}
-        keyExtractor={(item) => item.symbol}
+        data={stocks} // ← This array contains AAPL, TSLA, GOOGL
+        renderItem={renderStockItem} // This function is called for each item in the array.
+        keyExtractor={(item) => item.symbol} // This is the key for the stock item.
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> // This is the refresh control for the flat list.
         }
-        contentContainerStyle={styles.listContainer}
-        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContainer} // This is the style for the list container.
+        showsVerticalScrollIndicator={false} // This is the scroll indicator for the flat list.
       />
     </View>
   );

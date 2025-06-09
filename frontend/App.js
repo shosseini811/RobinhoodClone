@@ -19,15 +19,15 @@ const Stack = createStackNavigator();
 function HomeStack() {
   return (
     <Stack.Navigator>
-      {/* First screen in the stack */}
+      {/* First screen - this is the "bottom" of the stack */}
       <Stack.Screen  // defines one specific screen in the stack
         name="HomeMain" 
         component={HomeScreen} 
         options={{ title: 'Home Screen' }}// Sets the title in the header
       />
-      {/* Second screen in the stack */}
+      {/* Second screen - this goes "on top" when navigated to */}
       <Stack.Screen 
-        name="StockDetail" 
+        name="StockDetail"  // This is the unique identifier for this screen within the stack.
         component={StockDetailScreen} 
         options={({ route }) => {
           console.log('HomeStack route:', route);
@@ -95,12 +95,12 @@ export default function App() {
         }}
       >
         <Tab.Screen 
-          name="Home" 
-          component={HomeStack}
+          name="Home"  // This is the unique identifier for this screen within the tab.
+          component={HomeStack} // This is the component for this screen.
           options={{
-            tabBarLabel: 'Market',
+            tabBarLabel: 'Market', // This is the label for this screen.
             tabBarIcon: ({ color }) => (
-              <Text style={{ color, fontSize: 20 }}>📈</Text>
+              <Text style={{ color, fontSize: 20 }}>📈</Text> // This is the icon for this screen.
             ),
           }}
         />
